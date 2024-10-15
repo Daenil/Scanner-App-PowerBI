@@ -65,7 +65,8 @@ class _HomePage extends State<HomePage> {
     }
   }
 
-  Future<void> showConfirmationDialog(BuildContext context, String scannedBarcode) async {
+  Future<void> showConfirmationDialog(
+      BuildContext context, String scannedBarcode) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -93,7 +94,8 @@ class _HomePage extends State<HomePage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => CadastroVendas(scannedBarcode: scannedBarcode),
+                    builder: (context) =>
+                        CadastroVendas(scannedBarcode: scannedBarcode),
                   ),
                 );
               },
@@ -157,7 +159,7 @@ class _HomePage extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(250, 191, 79, 1),
         title: Text(
-          "Seja Bem Vindo!",
+          "Seja Bem Vindo(a)!",
           style: TextStyle(
               color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold),
         ),
@@ -168,17 +170,17 @@ class _HomePage extends State<HomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(height: 40),
-            Container(
-              child: Center(
-                child: FractionallySizedBox(
-                  widthFactor: 0.6,
-                  child: Image.asset(
-                    "lib/images/icon.png",
-                    width: 30,
-                  ),
-                ),
-              ),
-            ),
+            // Container(
+            //   child: Center(
+            //     child: FractionallySizedBox(
+            //       widthFactor: 0.6,
+            //       child: Image.asset(
+            //         "lib/images/icon.png",
+            //         width: 30,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Expanded(
               child: Center(
                 child: ListView(
@@ -213,6 +215,14 @@ class _HomePage extends State<HomePage> {
                       icon: Icons.qr_code_scanner,
                       label: 'Leitura Produto',
                       onPressed: () => scanAndCheckBarcode(),
+                      context: context,
+                    ),
+                    SizedBox(height: 100),
+                    _buildButton(
+                      icon: Icons.align_horizontal_left_rounded,
+                      label: 'Análises',
+                      onPressed: () =>
+                          Navigator.pushNamed(context, "/analises"),
                       context: context,
                     ),
                   ],

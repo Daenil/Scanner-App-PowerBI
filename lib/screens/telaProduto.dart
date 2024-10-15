@@ -117,6 +117,37 @@ class _TelaProduto extends State<TelaProduto> {
                 return Card(
                   margin: EdgeInsets.symmetric(vertical: 7, horizontal: 10),
                   child: ListTile(
+                    leading: data['imageUrl'] != null
+                        ? ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              data['imageUrl'],
+                              width: 50,
+                              height: 50,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (BuildContext context,
+                                  Widget child,
+                                  ImageChunkEvent? loadingProgress) {
+                                if (loadingProgress == null) {
+                                  return child; // Imagem carregada, exibe a imagem
+                                }
+                                return Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    Container(
+                                      width: 50,
+                                      height: 50,
+                                      color: Colors.grey
+                                          .shade200, // Fundo cinza claro enquanto carrega
+                                    ),
+                                    CircularProgressIndicator(), // Mostra o indicador de carregamento
+                                  ],
+                                );
+                              },
+                            ),
+                          )
+                        : Icon(Icons.image_not_supported),
+
                     title: Text(
                       data['descricao'],
                       style: TextStyle(fontWeight: FontWeight.bold),

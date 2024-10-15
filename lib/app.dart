@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scanner_app/screens/atualizacaodeVendas.dart';
 import 'package:scanner_app/screens/cadastrarProdutos_page.dart';
 import 'package:scanner_app/screens/clientes.dart';
+import 'package:scanner_app/screens/analises.dart';
 import 'package:scanner_app/screens/vendasScreen.dart';
 import 'screens/atualizarProdutos.dart';
 import 'screens/telaProduto.dart';
@@ -38,6 +39,7 @@ class ScannerApp extends StatelessWidget {
             TelaResumo(), //rota para a tela de cadastro de clientes
         "/clientes": (context) =>
             clientes(), //rota para a tela de cadastro de clientes
+        "/analises": (context) => analises(),
         // "/atualizarProdutos": (context) =>
         //     UpdateProdutosPage(), //rota para a tela de atualizar o produto
       },
