@@ -21,6 +21,7 @@ class CadastrarProdutosPage extends StatefulWidget {
 }
 
 class _CadastrarProdutosPageState extends State<CadastrarProdutosPage> {
+  bool isLoading = false;
   String randomNumbers = '';
   final imagePicker = ImagePicker();
   File? imageFile;
@@ -74,6 +75,10 @@ class _CadastrarProdutosPageState extends State<CadastrarProdutosPage> {
   final txtReferencia = TextEditingController();
 
   void _Cadastrar(BuildContext context) async {
+    setState(() {
+      isLoading = true;
+    });
+
     List<String> camposNaoPreenchidos = [];
 
     if (txtDescricao.text.isEmpty) {
@@ -311,19 +316,16 @@ class _CadastrarProdutosPageState extends State<CadastrarProdutosPage> {
                 ),
               ),
               SizedBox(height: 25),
-              Container(
-                width: 150,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                  ),
-                  onPressed: () => _Cadastrar(context),
-                  child: Text(
-                    "Cadastrar",
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                ),
-              ),
+isLoading 
+                  ? CircularProgressIndicator() // Mostra o indicador de progresso enquanto está carregando
+                  : Container(
+                      width: 150,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+                        onPressed: () => _Cadastrar(context),
+                        child: Text("Cadastrar", style: TextStyle(fontSize: 16, color: Colors.white)),
+                      ),
+                    ),
             ]),
           ),
         ),

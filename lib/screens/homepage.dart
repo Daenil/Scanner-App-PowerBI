@@ -157,7 +157,7 @@ class _HomePage extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(250, 191, 79, 1),
+        backgroundColor: StylesProntos.colorPadrao,
         title: Text(
           "Seja Bem Vindo(a)!",
           style: TextStyle(

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 
 class StylesProntos {
 
-  static const Color colorPadrao = Color.fromARGB(255, 250, 191, 79);
-  // Método para calcular o tamanho do texto com base na largura da tela
+  static const Color colorPadrao = Color.fromARGB(255, 244, 222, 96);
   static double calculateFontSize(BuildContext context, double baseFontSize) {
     final Size screenSize = MediaQuery.of(context).size;
     final double screenWidth = screenSize.width;
