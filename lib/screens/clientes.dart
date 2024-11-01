@@ -35,6 +35,7 @@ class clientes extends StatelessWidget {
           }
 
           var docs = snapshot.data!.docs;
+          docs.sort((a, b) => a['name'].compareTo(b['name']));
 
           return ListView.separated(
             padding: EdgeInsets.only(top: 20),

@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:scanner_app/screens/atualizarProdutos.dart';
 import 'package:scanner_app/styles/styles.dart';
 import 'package:scanner_app/screens/homepage.dart';
@@ -52,7 +51,6 @@ class _TelaProduto extends State<TelaProduto> {
         barcode = scannedBarcode;
       });
       if (exists) {
-        // Código de barras já existe no Firestore
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Código de barras encontrado no banco de dados!'),
           backgroundColor: Colors.green,
@@ -65,7 +63,6 @@ class _TelaProduto extends State<TelaProduto> {
           ),
         );
       } else {
-        // Código de barras não existe no Firestore
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('Código de barras não encontrado no banco de dados.'),
           backgroundColor: Colors.red,
@@ -91,7 +88,7 @@ class _TelaProduto extends State<TelaProduto> {
           "Tela de Produtos",
           style: TextStyle(color: Colors.white),
         ),
-        centerTitle: true, // centraliza o titulo
+        centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
@@ -106,10 +103,11 @@ class _TelaProduto extends State<TelaProduto> {
           }
 
           var docs = snapshot.data!.docs;
+          docs.sort((a, b) => a['descricao'].compareTo(b['descricao']));
 
           return ListView(
             padding: EdgeInsets.only(top: 13),
-            children: snapshot.data!.docs.map(
+            children: docs.map(
               (DocumentSnapshot document) {
                 Map<String, dynamic> data =
                     document.data() as Map<String, dynamic>;
@@ -129,7 +127,7 @@ class _TelaProduto extends State<TelaProduto> {
                                   Widget child,
                                   ImageChunkEvent? loadingProgress) {
                                 if (loadingProgress == null) {
-                                  return child; // Imagem carregada, exibe a imagem
+                                  return child;
                                 }
                                 return Stack(
                                   alignment: Alignment.center,
@@ -137,31 +135,28 @@ class _TelaProduto extends State<TelaProduto> {
                                     Container(
                                       width: 50,
                                       height: 50,
-                                      color: Colors.grey
-                                          .shade200, // Fundo cinza claro enquanto carrega
+                                      color: Colors.grey.shade200,
                                     ),
-                                    CircularProgressIndicator(), // Mostra o indicador de carregamento
+                                    CircularProgressIndicator(),
                                   ],
                                 );
                               },
                             ),
                           )
                         : Icon(Icons.image_not_supported),
-
                     title: Text(
                       data['descricao'],
                       style: TextStyle(fontWeight: FontWeight.bold),
-                    ), // deixa as letras mais escuras
+                    ),
                     subtitle: Text(
                       data['precoVenda'],
                       style: TextStyle(fontWeight: FontWeight.bold),
-                    ), // deixa as letras mais escuras
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: Icon(Icons.edit,
-                              size: 28), // Define o tamanho do ícone como 28
+                          icon: Icon(Icons.edit, size: 28),
                           onPressed: () {
                             Navigator.push(
                               context,
@@ -173,8 +168,7 @@ class _TelaProduto extends State<TelaProduto> {
                           },
                         ),
                         IconButton(
-                          icon: Icon(Icons.delete,
-                              size: 28), // Define o tamanho do ícone como 28
+                          icon: Icon(Icons.delete, size: 28),
                           onPressed: () {
                             showDialog(
                               context: context,
@@ -197,13 +191,13 @@ class _TelaProduto extends State<TelaProduto> {
                                           .delete();
                                       Navigator.of(context).pop();
                                     },
-                                    child: Text('confirmar'),
-                                  )
+                                    child: Text('Confirmar'),
+                                  ),
                                 ],
                               ),
                             );
                           },
-                        )
+                        ),
                       ],
                     ),
                   ),

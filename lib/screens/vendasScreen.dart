@@ -34,6 +34,7 @@ class SelecaoVendasScreen extends StatelessWidget {
           }
 
           var docs = snapshot.data!.docs;
+          docs.sort((a, b) => a['nomeCliente'].compareTo(b['nomeCliente']));          
 
           return ListView.separated(
             padding: EdgeInsets.only(top: 20),
