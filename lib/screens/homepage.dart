@@ -4,6 +4,9 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:scanner_app/screens/cadastrarVendas.dart';
 import 'package:scanner_app/screens/cadastrarProdutos_page.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -64,6 +67,37 @@ class _HomePage extends State<HomePage> {
       }
     }
   }
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   importarDadosParaFirestore(); // Chamar a função durante a inicialização do aplicativo
+  // }
+
+  // Future<void> importarDadosParaFirestore() async {
+  //   try {
+  //     // Carregar o arquivo JSON
+  //     final String jsonString =
+  //         await rootBundle.loadString('assets/Dataset_Joias_Export.json');
+  //     final dynamic dados = json.decode(jsonString);
+
+  //     // Verifica se os dados são uma lista
+  //     if (dados is List) {
+  //       final collectionRef = FirebaseFirestore.instance.collection('Vendas');
+  //       for (var item in dados) {
+  //         if (item is Map<String, dynamic>) {
+  //           // Adiciona cada item à coleção do Firestore
+  //           await collectionRef.add(item);
+  //         }
+  //       }
+  //       print('Importação concluída com sucesso!');
+  //     } else {
+  //       print('Erro: o JSON não é uma lista.');
+  //     }
+  //   } catch (e) {
+  //     print('Erro ao importar os dados: $e');
+  //   }
+  // }
 
   Future<void> showConfirmationDialog(
       BuildContext context, String scannedBarcode) async {
@@ -157,7 +191,7 @@ class _HomePage extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: StylesProntos.colorPadrao,
+        backgroundColor: const Color.fromRGBO(250, 191, 79, 1),
         title: Text(
           "Seja Bem Vindo(a)!",
           style: TextStyle(
