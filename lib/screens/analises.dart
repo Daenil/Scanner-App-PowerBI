@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:scanner_app/screens/updateClientes.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:scanner_app/styles/styles.dart';
 
 class analises extends StatelessWidget {
-  analises({Key? key});
+  final String url = "https://www.google.com.br"; // Coloque sua URL aqui
+
+  analises({Key? key}) : super(key: key);
+
+  // Função para lançar o URL
+  void _launchURL() async {
+    final Uri uri = Uri.parse(url);
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      throw 'Não foi possível abrir a URL.';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +27,12 @@ class analises extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
         centerTitle: true,
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: _launchURL,
+          child: Text('Abrir URL'),
+        ),
       ),
     );
   }
