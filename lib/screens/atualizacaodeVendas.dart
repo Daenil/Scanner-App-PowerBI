@@ -41,13 +41,13 @@ class _AtualizacaodeVendasState extends State<AtualizacaodeVendas> {
         idPronto: produto['idProduto'],
         nomeProd: produto['nomeProd'],
         qtd: produto['qtd'],
-        precoVenda: produto['precoVenda'],
+        precoVenda: double.tryParse(produto['precoVenda'].toString()) ?? 0.0,
       );
     }).toList();
   }
 
   void atualizarProdutosVendas(BuildContext context) {
-    returnTime();
+    var dateTime = returnTime();
     if (nomeCliente.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -74,14 +74,18 @@ class _AtualizacaodeVendasState extends State<AtualizacaodeVendas> {
 
     // Calcular o total da venda
     double totalVenda = produtos.fold(0, (total, produto) {
-      double produtoTotal = double.parse(produto.qtd!) * produto.precoVenda!;
+      double produtoTotal =
+          double.parse(produto.qtd!) * (produto.precoVenda ?? 0.0);
       return total + produtoTotal;
     });
 
     // Atualizar no Firestore
-    FirebaseFirestore.instance.collection('Vendas').doc(widget.document.id).update({
-      'Data': returnTime()['data'],
-      'Time': returnTime()['time'],
+    FirebaseFirestore.instance
+        .collection('Vendas')
+        .doc(widget.document.id)
+        .update({
+      'Data': dateTime['data'],
+      'Time': dateTime['time'],
       'nomeCliente': nomeCliente.text,
       'produtos': produtos.map((produto) {
         return {
@@ -89,10 +93,10 @@ class _AtualizacaodeVendasState extends State<AtualizacaodeVendas> {
           'nomeProd': produto.nomeProd,
           'qtd': produto.qtd,
           'precoVenda': produto.precoVenda,
-          'total': double.parse(produto.qtd!) * produto.precoVenda!,
+          'total': double.parse(produto.qtd!) * (produto.precoVenda ?? 0.0),
         };
       }).toList(),
-      'totalVenda': totalVenda, // Adiciona o total da venda aqui
+      'totalVenda': totalVenda,
       'createdAt': Timestamp.now(),
     });
 
@@ -108,7 +112,9 @@ class _AtualizacaodeVendasState extends State<AtualizacaodeVendas> {
 
   void removerUltimosProdutos() {
     setState(() {
-      produtos.removeRange(produtos.length - 1, produtos.length);
+      if (produtos.isNotEmpty) {
+        produtos.removeLast();
+      }
     });
   }
 
@@ -199,7 +205,8 @@ class _AtualizacaodeVendasState extends State<AtualizacaodeVendas> {
                         TypeAheadFormField<DocumentSnapshot>(
                           textFieldConfiguration: TextFieldConfiguration(
                             decoration: InputDecoration(
-                              labelText: 'Insira ou selecione a referência do produto',
+                              labelText:
+                                  'Insira ou selecione a referência do produto',
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
@@ -222,7 +229,8 @@ class _AtualizacaodeVendasState extends State<AtualizacaodeVendas> {
                                   suggestion['precoVenda']
                                       .replaceAll('.', '')
                                       .replaceAll(',', '.'));
-                              produto.controller.text = suggestion['referencia'];
+                              produto.controller.text =
+                                  suggestion['referencia'];
                             });
                           },
                           noItemsFoundBuilder: (context) => Padding(
@@ -250,7 +258,9 @@ class _AtualizacaodeVendasState extends State<AtualizacaodeVendas> {
                           },
                         ),
                         SizedBox(height: 16.0),
-                        if (produto.precoVenda != null && produto.qtd != null && produto.qtd!.isNotEmpty)
+                        if (produto.precoVenda != null &&
+                            produto.qtd != null &&
+                            produto.qtd!.isNotEmpty)
                           Text(
                             'Total: R\$${(produto.precoVenda! * int.parse(produto.qtd!)).toStringAsFixed(2)}',
                             style: TextStyle(fontSize: 18, color: Colors.black),
@@ -270,29 +280,18 @@ class _AtualizacaodeVendasState extends State<AtualizacaodeVendas> {
                     onPressed: removerUltimosProdutos,
                     child: Text(
                       '-',
-                      style: StylesProntos.textBotao(context, '20', Colors.white),
+                      style:
+                          StylesProntos.textBotao(context, '20', Colors.white),
                     ),
                   ),
                 TextButton(
                   style: StylesProntos.pequenoBotaoVerde(context),
                   onPressed: () {
-                    setState(
-                      () {
-                        produtos.add(Product());
-                      },
-                    );
+                    atualizarProdutosVendas(context);
                   },
                   child: Text(
-                    '+',
-                    style: StylesProntos.textBotao(context, '20', Colors.white),
-                  ),
-                ),
-                TextButton(
-                  style: StylesProntos.pequenoBotaoBlue(context),
-                  onPressed: () => atualizarProdutosVendas(context),
-                  child: Text(
-                    '✓',
-                    style: StylesProntos.textBotao(context, '20', Colors.white),
+                    'Atualizar',
+                    style: StylesProntos.textBotao(context, '18', Colors.white),
                   ),
                 ),
               ],

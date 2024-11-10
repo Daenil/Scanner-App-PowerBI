@@ -42,78 +42,96 @@ class TelaResumo extends StatelessWidget {
   }
 
   Future<void> _printScreen(BuildContext context) async {
-    final doc = pw.Document();
+    try {
+      final doc = pw.Document();
+      final saleSnapshot = await getLastSale();
 
-    final saleSnapshot = await getLastSale();
-    if (saleSnapshot.data() != null) {
-      final saleData = saleSnapshot.data()!;
-      final clientName = saleData['nomeCliente'];
-      final clientSnapshot = await getClientData(clientName);
-      final clientData = clientSnapshot.data()!;
-      final produtos = List<Map<String, dynamic>>.from(saleData['produtos']);
-      final totalVenda = saleData['totalVenda'] is num ? saleData['totalVenda'] : double.parse(saleData['totalVenda']);
+      if (saleSnapshot.data() != null) {
+        final saleData = saleSnapshot.data()!;
+        final clientName = saleData['nomeCliente'];
+        final clientSnapshot = await getClientData(clientName);
+        final clientData = clientSnapshot.data()!;
+        final produtos = List<Map<String, dynamic>>.from(saleData['produtos']);
+        final totalVenda = saleData['totalVenda'] is num
+            ? saleData['totalVenda']
+            : double.tryParse(saleData['totalVenda']) ?? 0.0;
 
-      doc.addPage(
-        pw.Page(
-          build: (pw.Context context) {
-            return pw.Center(
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Text('Nome do Cliente: $clientName',
-                      style: pw.TextStyle(fontSize: 20, fontWeight: pw.FontWeight.bold)),
-                  pw.SizedBox(height: 10),
-                  pw.Text('CNPJ: ${clientData['cnpj']}',
-                      style: pw.TextStyle(fontSize: 12)),
-                  pw.Text('Telefone: ${clientData['telefone']}',
-                      style: pw.TextStyle(fontSize: 12)),
-                  pw.Text('Cidade: ${clientData['cidade']}',
-                      style: pw.TextStyle(fontSize: 12)),
-                  pw.SizedBox(height: 20),
-                  pw.Text('Data: ${saleData['Data'] ?? "Data não disponível"}',
-                      style: pw.TextStyle(fontSize: 16)),
-                  pw.Text('Hora: ${saleData['Time'] ?? "Tempo não disponível"}',
-                      style: pw.TextStyle(fontSize: 16)),
-                  pw.SizedBox(height: 20),
-                  pw.Text('Produtos:',
-                      style: pw.TextStyle(
-                          fontSize: 20, fontWeight: pw.FontWeight.bold)),
-                  ...produtos.map((produto) {
-                    final precoVenda = produto['precoVenda'] is num ? produto['precoVenda'] : double.parse(produto['precoVenda']);
-                    final qtd = produto['qtd'] is num ? produto['qtd'] : double.parse(produto['qtd']);
-                    final totalProduto = precoVenda * qtd;
-                    return pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text('Nome do Produto: ${produto['nomeProd']}',
-                            style: pw.TextStyle(fontSize: 12)),
-                        pw.Text('Quantidade: ${qtd % 1 == 0 ? qtd.toInt() : qtd}',
-                            style: pw.TextStyle(fontSize: 12)),
-                        pw.Text('Preço de Venda: R\$${precoVenda.toStringAsFixed(2)}',
-                            style: pw.TextStyle(fontSize: 12)),
-                        pw.Text('Total: R\$${totalProduto.toStringAsFixed(2)}',
-                            style: pw.TextStyle(fontSize: 12)),
-                        pw.SizedBox(height: 10),
-                      ],
-                    );
-                  }).toList(),
-                  pw.SizedBox(height: 20),
-                  pw.Text('Total da Venda: R\$${totalVenda.toStringAsFixed(2)}',
-                      style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
-                ],
-              ),
-            );
-          },
-        ),
-      );
+        doc.addPage(
+          pw.Page(
+            build: (pw.Context context) {
+              return pw.Center(
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text('Nome do Cliente: $clientName',
+                        style: pw.TextStyle(
+                            fontSize: 20, fontWeight: pw.FontWeight.bold)),
+                    pw.SizedBox(height: 10),
+                    pw.Text('CNPJ: ${clientData['cnpj'] ?? "Não disponível"}',
+                        style: pw.TextStyle(fontSize: 12)),
+                    pw.Text(
+                        'Telefone: ${clientData['telefone'] ?? "Não disponível"}',
+                        style: pw.TextStyle(fontSize: 12)),
+                    pw.Text(
+                        'Cidade: ${clientData['cidade'] ?? "Não disponível"}',
+                        style: pw.TextStyle(fontSize: 12)),
+                    pw.SizedBox(height: 20),
+                    pw.Text(
+                        'Data: ${saleData['Data'] ?? "Data não disponível"}',
+                        style: pw.TextStyle(fontSize: 16)),
+                    pw.Text(
+                        'Hora: ${saleData['Time'] ?? "Tempo não disponível"}',
+                        style: pw.TextStyle(fontSize: 16)),
+                    pw.SizedBox(height: 20),
+                    pw.Text('Produtos:',
+                        style: pw.TextStyle(
+                            fontSize: 20, fontWeight: pw.FontWeight.bold)),
+                    ...produtos.map((produto) {
+                      final precoVenda = produto['precoVenda'] is num
+                          ? produto['precoVenda']
+                          : double.tryParse(produto['precoVenda']) ?? 0.0;
+                      final qtd = produto['qtd'] is num
+                          ? produto['qtd']
+                          : double.tryParse(produto['qtd']) ?? 1;
+                      final totalProduto = precoVenda * qtd;
+                      return pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Text('Nome do Produto: ${produto['nomeProd']}',
+                              style: pw.TextStyle(fontSize: 12)),
+                          pw.Text(
+                              'Quantidade: ${qtd % 1 == 0 ? qtd.toInt() : qtd}',
+                              style: pw.TextStyle(fontSize: 12)),
+                          pw.Text(
+                              'Preço de Venda: R\$${precoVenda.toStringAsFixed(2)}',
+                              style: pw.TextStyle(fontSize: 12)),
+                          pw.Text(
+                              'Total: R\$${totalProduto.toStringAsFixed(2)}',
+                              style: pw.TextStyle(fontSize: 12)),
+                          pw.SizedBox(height: 10),
+                        ],
+                      );
+                    }).toList(),
+                    pw.SizedBox(height: 20),
+                    pw.Text(
+                        'Total da Venda: R\$${totalVenda.toStringAsFixed(2)}',
+                        style: pw.TextStyle(
+                            fontSize: 16, fontWeight: pw.FontWeight.bold)),
+                  ],
+                ),
+              );
+            },
+          ),
+        );
 
-      // Salvar o PDF no dispositivo
-      final output = await getTemporaryDirectory();
-      final file = File("${output.path}/resumo_venda.pdf");
-      await file.writeAsBytes(await doc.save());
-
-      // Compartilhar o PDF
-      await Share.shareFiles([file.path], text: 'Resumo da última venda');
+        final output = await getTemporaryDirectory();
+        final file = File("${output.path}/resumo_venda.pdf");
+        await file.writeAsBytes(await doc.save());
+        await Share.shareFiles([file.path], text: 'Resumo da última venda');
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Erro ao gerar PDF: $e")));
     }
   }
 
@@ -141,7 +159,7 @@ class TelaResumo extends StatelessWidget {
           }
 
           List<dynamic> produtos = data['produtos'];
-          double totalVenda = data['totalVenda'] is num ? data['totalVenda'] : double.parse(data['totalVenda']);
+          double totalVenda = (data['totalVenda'] as num).toDouble();
 
           return Padding(
             padding: const EdgeInsets.all(16.0),
@@ -174,11 +192,16 @@ class TelaResumo extends StatelessWidget {
                         SizedBox(height: 10),
                         ...produtos.map(
                           (produto) {
-                            final precoVenda = produto['precoVenda'] is num ? produto['precoVenda'] : double.parse(produto['precoVenda']);
-                            final qtd = produto['qtd'] is num ? produto['qtd'] : double.parse(produto['qtd']);
+                            final precoVenda = produto['precoVenda'] is num
+                                ? produto['precoVenda']
+                                : double.parse(produto['precoVenda']);
+                            final qtd = produto['qtd'] is num
+                                ? produto['qtd']
+                                : double.parse(produto['qtd']);
                             final totalProduto = precoVenda * qtd;
                             return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 4.0),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -186,11 +209,14 @@ class TelaResumo extends StatelessWidget {
                                     'Nome do Produto: ${produto['nomeProd']}',
                                     style: TextStyle(fontSize: 16),
                                   ),
-                                  Text('Quantidade: ${qtd % 1 == 0 ? qtd.toInt() : qtd}',
+                                  Text(
+                                      'Quantidade: ${qtd % 1 == 0 ? qtd.toInt() : qtd}',
                                       style: TextStyle(fontSize: 16)),
-                                  Text('Preço de Venda: R\$${precoVenda.toStringAsFixed(2)}',
+                                  Text(
+                                      'Preço de Venda: R\$${precoVenda.toStringAsFixed(2)}',
                                       style: TextStyle(fontSize: 16)),
-                                  Text('Total: R\$${totalProduto.toStringAsFixed(2)}',
+                                  Text(
+                                      'Total: R\$${totalProduto.toStringAsFixed(2)}',
                                       style: TextStyle(fontSize: 16)),
                                   Divider(),
                                 ],

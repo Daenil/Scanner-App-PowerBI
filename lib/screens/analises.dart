@@ -10,7 +10,7 @@ class analises extends StatelessWidget {
 
   // Insira o link do seu dashboard do PowerBI
   final String powerBiDashboardUrl =
-      'https://app.powerbi.com/view?r=eyJrIjoiMWFiY2QyMGItZmEyOC00NDE1LTg5MjYtM2UwZmMxODllOTM1IiwidCI6ImE3MWVmZTEyLTIxOGQtNDgwMy05NWJkLTRjODk2YmE3Y2U2NiJ9';
+      'https://app.powerbi.com/view?r=eyJrIjoiMWFiY2QyMGItZmEyOC00NDE1LTg5MjYtM2UwZmMxODllOTM1IiwidCI6ImE3MWVmZTEyLTIxOGQtNDgwMy05NWJkLTRjODk2YmE3Y2U2NiJ9&timestamp=${DateTime.now().millisecondsSinceEpoch}';
 
   final WebViewController controller = WebViewController()
     ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -32,7 +32,7 @@ class analises extends StatelessWidget {
       ),
     )
     ..loadRequest(Uri.parse(
-        'https://app.powerbi.com/view?r=eyJrIjoiMWFiY2QyMGItZmEyOC00NDE1LTg5MjYtM2UwZmMxODllOTM1IiwidCI6ImE3MWVmZTEyLTIxOGQtNDgwMy05NWJkLTRjODk2YmE3Y2U2NiJ9')); // Altere aqui
+        'https://app.powerbi.com/view?r=eyJrIjoiMWFiY2QyMGItZmEyOC00NDE1LTg5MjYtM2UwZmMxODllOTM1IiwidCI6ImE3MWVmZTEyLTIxOGQtNDgwMy05NWJkLTRjODk2YmE3Y2U2NiJ9&timestamp=${DateTime.now().millisecondsSinceEpoch}')); // Altere aqui
 
   @override
   Widget build(BuildContext context) {

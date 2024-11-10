@@ -262,12 +262,13 @@ class _CadastroVendasState extends State<CadastroVendas> {
                           },
                         ),
                         SizedBox(height: 16.0),
-                        if (produto.precoVenda != null && produto.qtd != null && produto.qtd!.isNotEmpty)
+                        if (produto.precoVenda != null &&
+                            produto.qtd != null &&
+                            produto.qtd!.isNotEmpty)
                           Text(
                             'Total: R\$${(produto.precoVenda! * int.parse(produto.qtd!)).toStringAsFixed(2)}',
                             style: TextStyle(fontSize: 18, color: Colors.black),
                           ),
-                        
                         SizedBox(height: 16.0),
                       ],
                     ),
