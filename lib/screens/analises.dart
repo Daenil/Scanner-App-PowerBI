@@ -10,15 +10,13 @@ class analises extends StatelessWidget {
 
   // Insira o link do seu dashboard do PowerBI
   final String powerBiDashboardUrl =
-      'https://app.powerbi.com/view?r=eyJrIjoiMWFiY2QyMGItZmEyOC00NDE1LTg5MjYtM2UwZmMxODllOTM1IiwidCI6ImE3MWVmZTEyLTIxOGQtNDgwMy05NWJkLTRjODk2YmE3Y2U2NiJ9&timestamp=${DateTime.now().millisecondsSinceEpoch}';
+      'https://app.powerbi.com/reportEmbed?reportId=45a96a0a-c923-4f57-8009-a272037b0baf&autoAuth=true&ctid=a71efe12-218d-4803-95bd-4c896ba7ce66';
 
   final WebViewController controller = WebViewController()
     ..setJavaScriptMode(JavaScriptMode.unrestricted)
     ..setNavigationDelegate(
       NavigationDelegate(
-        onProgress: (int progress) {
-          // Update loading bar.
-        },
+        onProgress: (int progress) {},
         onPageStarted: (String url) {},
         onPageFinished: (String url) {},
         onHttpError: (HttpResponseError error) {},
@@ -32,7 +30,7 @@ class analises extends StatelessWidget {
       ),
     )
     ..loadRequest(Uri.parse(
-        'https://app.powerbi.com/view?r=eyJrIjoiMWFiY2QyMGItZmEyOC00NDE1LTg5MjYtM2UwZmMxODllOTM1IiwidCI6ImE3MWVmZTEyLTIxOGQtNDgwMy05NWJkLTRjODk2YmE3Y2U2NiJ9&timestamp=${DateTime.now().millisecondsSinceEpoch}')); // Altere aqui
+        'https://app.powerbi.com/reportEmbed?reportId=45a96a0a-c923-4f57-8009-a272037b0baf&autoAuth=true&ctid=a71efe12-218d-4803-95bd-4c896ba7ce66')); // Altere aqui
 
   @override
   Widget build(BuildContext context) {
